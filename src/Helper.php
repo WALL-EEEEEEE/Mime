@@ -12,13 +12,20 @@ class Helper {
     /**
      * @method GrabUserAgents()
      *
-     * Grab useragets string from http://useragentstring.com/
+     * Grab useragents string from http://useragentstring.com/
      */
     public static function GrabUserAgents() {
 
         $org_ua_strings = self::__cache_user_agents('/tmp/.ua');
     }
 
+    /**
+     * @method __cache_user_agents()
+     *
+     * Cache original useragents strings from http://useragentstring.com
+     *
+     * @param string $cache_path Path stored the cached useragents
+     */
     private static function  __cache_user_agents($cache_path){
         $url = 'http://useragentstring.com/pages/useragentstring.php?name=All';
         $contents = file_get_contents($url);
@@ -37,22 +44,44 @@ class Helper {
             }
         }
         self::__parse_user_agents($contents);
-        
-
-
     }
 
+    /**
+     * @method __parse_user_agents()
+     *
+     * Parse user-agent headers from original ua strings
+     *
+     * @param string $ua_string original content grabed from http://useragentstring.com
+     *
+     */
     private static function __parse_user_agents($ua_strings) {
-        $xpath = '//h3/text()';
-        $html = new \DomDocument();
-        @$html->loadHTML($ua_strings);
-        $dom_xpath = new \DOMXPath($html);
-        $browser_nodes = $dom_xpath->query($xpath);
-        $browser_types = [];
-        foreach($browser_nodes as $node) {
-            $browser_types[] = $node->nodeValue;
-        }
+        $browser_typs = [
+            'browsers',
+            'cloud_platforms',
+        ];
+        $xpath = '//h3[preceding::h3[text()="BROWSERS"] and following::h3[text()="CLOUD PLATFORMS"]]';
+        $browser_types = self::__xpath($xpath,$ua_strings);
         var_dump($browser_types);
+    }
+
+    /**
+     * @method __xpath()
+     * 
+     * Simple tool to extract html by xpath
+     *
+     * @param string $xpath xpath string
+     */
+    private static function __xpath($xpath, $html) {
+        $document = new \DomDocument();
+        @$document->loadHTML($html);
+        $dom_xpath = new \DOMXPath($document);
+        $nodelists = $dom_xpath->query($xpath);
+        $contents = [];
+        foreach($nodelists as $node) {
+            $contents[] = $node->nodeValue;
+        }
+        return $contents;
+ 
     }
 
 
