@@ -18,7 +18,7 @@ class Helper {
      * @param $debug whether to switch on debug mode
      * Grab useragents string from http://useragentstring.com/
      */
-    public static function GrabUserAgents($debug = false) {
+    public static function GrabUserAgents(bool $debug = false) {
         self::$__debug = $debug;
         $org_ua_strings = self::__cache_user_agents();
         return $org_ua_strings;
@@ -36,20 +36,39 @@ class Helper {
         $allow_modes = [
             'ALL',
             'PC',
-            'MOBILE'
+            'MOBILE',
+            'BROWSER'
         ];
         $specified_ua = [];
         if (!in_array($mode,$allow_modes)) {
             throw ErrorException('HelperError: Invalid forge mode!');
             exit(0);
         }
+        $filter_ua = [];
         if ($mode == 'ALL') {
-            array_walk_recursive($ua,function(&$value,$key) use(&$specified_ua) {
-                $specified_ua[] = $value;
-            });
-        } else if ($mode == 'PC') {
+            $filter_ua = $ua;
+       } else if ($mode == 'PC') {
+            foreach($ua as $tua) {
+                if(array_keys($tua)[0] == 'BROWSERS') {
+                    $filter_ua= $tua;
+                }
+            }
         } else if ($mode == 'MOBILE') {
+            foreach($ua as $tua) {
+                if(array_keys($tua)[0] == 'MOBILE BROWSERS') {
+                    $filter_ua= $tua;
+                }
+            }
+        } else if ($mode == 'BROWSER') {
+            foreach($ua as $tua) {
+                if(array_keys($tua)[0] == 'MOBILE BROWSERS' || array_keys($tua)[0] == 'BROWSERS') {
+                    $filter_ua[] = $tua;
+                }
+            }
         }
+        array_walk_recursive($filter_ua,function(&$value,$key) use(&$specified_ua) {
+            $specified_ua[] = $value;
+        });
         return $specified_ua;
 
     }
@@ -149,15 +168,15 @@ class Helper {
                 if ( $i != count($browser) - 1 ) {
 
                     $xpath = '//h4[preceding::h3[text()="'.$browser[$i].'"] and following::h3[text()="'.$browser[$i+1].'"]]';
-                    $subsnippets_regex = '/<h3[^>]*>(?:<img[^>]*>)?'.addcslashes($browser[$i],'+').'<\/h3>.*<h3[^>]*>(?:<img[^>]*>)?'.addcslashes($browser[$i+1],'+').'<\/h3>/ms';
+                    $subsnippets_regex = '/<h3[^>]*>(?:<img[^>]*>)?'.addcslashes($browser[$i],'+').'<\/h3>.*<h3[^>]*>(?:<img[^>]*>)?'.addcslashes($browser[$i+1],'+').'<\/h3>/mUs';
                 } else {
                     if ( $key != count($browsers) -1 ) {
                         $xpath = '//h4[preceding::h3[text()="'.$browser[$i].'"] and following::h3[text()="'.array_keys($browsers[$key+1])[0].'"]]';
-                        $subsnippets_regex = '/<h3[^>]*>(?:<img[^>]*>)?'.$browser[$i].'<\/h3>.*<h3[^>]*>(?:<img[^>]*)?'.array_keys($browsers[$key+1])[0].'<\/h3>/ms';
+                        $subsnippets_regex = '/<h3[^>]*>(?:<img[^>]*>)?'.$browser[$i].'<\/h3>.*<h3[^>]*>(?:<img[^>]*)?'.array_keys($browsers[$key+1])[0].'<\/h3>/mUs';
  
                     } else {
                         $xpath = '//h4[preceding::h3[text()="'.$browser[$i].'"]]';
-                        $subsnippets_regex = '/<h3[^>]*>(?:<img[^>]*>)?'.$browser[$i].'<\/h3>.*<\/ul>/ms';
+                        $subsnippets_regex = '/<h3[^>]*>(?:<img[^>]*>)?'.$browser[$i].'<\/h3>.*<\/ul>/mUs';
                     }
                 }
                 $versions = self::__xpath($xpath,$cached_snippets[$type]);
@@ -207,6 +226,10 @@ class Helper {
         return $browsers;
     }
 
+    public static function debug(bool $debug) {
+        self::$__debug = $debug;
+        return self;
+    }
     /**
      * @method __xpath()
      * 
@@ -258,4 +281,6 @@ class Helper {
         }
         return $html;
     }
+
+
 }
