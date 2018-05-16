@@ -1,4 +1,4 @@
-<div align='right' style='display:inline-block'><strong>Docmentation:</strong> English <a href="https://github.com/duanqiaobb/pider/blob/develop/doc/zh_cn/README.md">Chinese</a></div>
+<div align='right' style='display:inline-block'><strong>Docmentation:</strong> English <a href="https://github.com/duanqiaobb/Mime/blob/master/doc/zh_cn/README.md">Chinese</a></div>
 
 # Mime
 
