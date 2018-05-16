@@ -22,7 +22,7 @@ git clone https://github.com/duanqiaobb/Mime.git
 
 #### 1. Random
 
-&ensp;&ensp;&ensp;&ensp; Generate a user-agent randomly.
+Generate a user-agent randomly.
 
 ```php
 <?php
@@ -36,7 +36,7 @@ var_dump($ua->random());
 
 #### 2. Browser
 
-&ensp;&ensp;&ensp;&ensp; Generate a browser user-agent randomly.
+Generate a browser user-agent randomly.
 
 ```php
 <?php
@@ -49,7 +49,7 @@ var_dump($ua->browser());
 
 #### 3. PC Browser UserAgent
 
-&ensp;&ensp;&ensp;&ensp; Generate a pc-browser user-agent randomly.
+Generate a pc-browser user-agent randomly.
 
 ```php
 <?php
@@ -62,7 +62,7 @@ var_dump($ua->pc());
 
 #### 4. Mobile Browser userAgent
 
-&ensp;&ensp;&ensp;&ensp; Generate a mobile-browser user-agent randomly.
+Generate a mobile-browser user-agent randomly.
 
 ```php
 <?php
