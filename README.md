@@ -9,7 +9,6 @@ It is actually designed for the use of avoiding blocking by user-agent by crawle
 + [https://www.useragentstring.com](https://www.useragentstring.com)
 
 > Useragent data is from [https://www.useragentstring.com](https://www.useragentstring.com).
-]
 
 
 # Installation
@@ -75,6 +74,10 @@ var_dump($ua->mobile());
 
 # Cache
 
-&ensp;&ensp;&ensp;&ensp;
+&ensp;&ensp;&ensp;&ensp; For the sake of avoiding fetching useragent data from [https://www.useragentstring.com]](https://www.useragentstring.com) each time. `Mime` only fetches it at the first time and caches it into `/tmp` diretory.
+
+# Fallback
+
+&ensp;&ensp;&ensp;&ensp; `Mime` has a fallback mechanic since (https://www.useragentstring.com)[https://www.useragentstring.com] doesn't work well sometimes. It will load cached useragents in `cache/` directory  when (https://www.useragentstring.com)[https://www.useragentstring.com] is down or up slow.
 
 
