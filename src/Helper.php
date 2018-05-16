@@ -11,24 +11,10 @@ class Helper {
     private static $__debug = false;
     private static $__cached_ua = '/tmp/.ua';
     private static $__cached_html = '/tmp/.ua-string-html';
+    private static $__fallback_cache = 'cache/useragent_version_1_0.json';
     
     /**
-     * @method GrabUserAgents()
-     *
-     * @param $debug whether to switch on debug mode
-     * Grab useragents string from http://useragentstring.com/
-     */
-    public static function GrabUserAgents(bool $debug = false) {
-        self::$__debug = $debug;
-        $org_ua_strings = self::__cache_user_agents();
-        return $org_ua_strings;
-    }
-
-    /**
-     * @method Forge()
-     * Forge ua strings and extract a specified set of ua from ua strings by mode
-     * @param  array $ua ua strings mappings 
-     * @param  string $mode ALL,PC,MOBILE
+     * @method GrabUserAgents() * * @param $debug whether to switch on debug mode * Grab useragents string from http://useragentstring.com/ */ public static function GrabUserAgents(bool $debug = false) { self::$__debug = $debug; $org_ua_strings = self::__cache_user_agents(); return $org_ua_strings; } /** * @method Forge() * Forge ua strings and extract a specified set of ua from ua strings by mode * @param  array $ua ua strings mappings * @param  string $mode ALL,PC,MOBILE
      * @return array  a specified set of  ua
      *
      */
@@ -103,12 +89,45 @@ class Helper {
             self::__debug("Caching UserAgent from http://useragentstring.com ...");
             $contents = self::__cache_html();
             if (empty($contents)) {
-                throw new \ErrorException('Mime Error: Can\'t get useragent strings from http://useragentstring.com, please check your network and retry!');
+                self::__debug('Can\'t get useragent strings from http://useragentstring.com !');
+                $ua = self::__fallback_cache();
+           } else {
+                $ua = self::__parse_user_agents($contents);
+                self::__debug("Caching UserAgent from http://useragentstring.com ... done");
+
             }
-            $ua = self::__parse_user_agents($contents);
-            self::__debug("Caching UserAgent from http://useragentstring.com ... done");
         }
         return $ua;
+    }
+
+    /**
+     * @method __fallback_cache()
+     *
+     * Fallback to use fallback cache
+     *
+     * @return string $ua useragent mapping array
+     *
+     */
+    private static function __fallback_cache() {
+        self::__debug('Fallback to use fallback cache ...');
+        self::__debug('Check Fallback cache ...');
+        $ua = '';
+        if(file_exists(self::$__fallback_cache)) {
+            self::__debug('Check Fallback cache ... yes ');
+            $fallback_cache = '';
+            if (file_exists(self::$__fallback_cache)) {
+                $fallback_cache = file_get_contents(self::$__fallback_cache);
+            }
+            //copy to cache directory
+            $cached_ua = dirname(self::$__cached_ua).DIRECTORY_SEPARATOR.base64_encode(self::$__cached_ua);
+            file_put_contents($cached_ua,$fallback_cache);
+            $ua = $fallback_cache;
+        } else {
+            self::__debug('Check Fallback cache ... no');
+            throw new \ErrorException('Can\'t generate useragent index');
+            exit(0);
+        }
+        return json_decode($ua,true);
     }
 
     /**
@@ -270,14 +289,16 @@ class Helper {
         } else {
             self::__debug('Html cached found ... no');
             self::__debug('Downloading html from http://useragentstring.com ...');
-            $html = file_get_contents($url);
+            $html = @file_get_contents($url);
             if (!file_exists(dirname($html_cached))) {
                 throw new ErrorException('Cache directory '.dirname($html_cached).' not exists ! ');
                 exit(0);
-            } else {
-                file_put_contents($html_cached,$html);
             }
-            self::__debug('Downloading html from http://useragentstring.com ... done ');
+
+            if (!empty($html)) {
+                    file_put_contents($html_cached,$html);
+                    self::__debug('Downloading html from http://useragentstring.com ... done ');
+            } 
         }
         return $html;
     }
