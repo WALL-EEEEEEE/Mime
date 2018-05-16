@@ -5,10 +5,10 @@ It is actually designed for the use of avoiding blocking by user-agent by crawle
 
 # Requirements
 
-+ >= php7.1
++ `>= php7.1`
 + [https://www.useragentstring.com](https://www.useragentstring.com)
 
-> &ensp;&ensp;&ensp;&ensp;Useragent data is from [https://www.useragentstring.com](https://www.useragentstring.com).
+> &ensp;&ensp;&ensp;Useragent data is from [https://www.useragentstring.com](https://www.useragentstring.com).
 ]
 
 
@@ -20,7 +20,7 @@ git clone https://github.com/duanqiaobb/Mime.git
 
 # Usage
 
-#### Random
+#### 1.Random
 
 &ensp;&ensp;&ensp;&ensp; Generate a user-agent randomly.
 
@@ -34,7 +34,7 @@ var_dump($ua->random());
 ```
 
 
-#### Browser
+#### 2.Browser
 
 &ensp;&ensp;&ensp;&ensp; Generate a browser user-agent randomly.
 
@@ -47,7 +47,7 @@ $ua = new UserAgent();
 var_dump($ua->browser());
 ```
 
-#### PC Browser UserAgent
+#### 3.PC Browser UserAgent
 
 &ensp;&ensp;&ensp;&ensp; Generate a pc-browser user-agent randomly.
 
@@ -60,7 +60,7 @@ $ua = new UserAgent();
 var_dump($ua->pc());
 ```
 
-#### Mobile Browser userAgent
+#### 4.Mobile Browser userAgent
 
 &ensp;&ensp;&ensp;&ensp; Generate a mobile-browser user-agent randomly.
 
