@@ -1,4 +1,5 @@
 # Mime
+<div align='right' style='display:inline-block'><strong>Docmentation:</strong> English <a href="https://github.com/duanqiaobb/pider/blob/develop/doc/zh_cn/README.md">Chinese</a></div>
 
 &ensp;&ensp;&ensp;&ensp;Mime is a php class library that contains tons of user-agent headers from real-world.
 It is actually designed for the use of avoiding crawlers-blocking by user-agent in many cases.
