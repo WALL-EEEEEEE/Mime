@@ -80,6 +80,6 @@ var_dump($ua->mobile());
 
 # Fallback
 
-&ensp;&ensp;&ensp;&ensp; `Mime` has a fallback mechanic since [https://www.useragentstring.com](https://www.useragentstring.com) doesn't work well sometimes. It will load cached useragents in `cache/` directory  when [https://www.useragentstring.com](https://www.useragentstring.com) is down or up slow.
+&ensp;&ensp;&ensp;&ensp; `Mime` has a fallback mechanic since [https://www.useragentstring.com](https://www.useragentstring.com) doesn't work well sometimes. It will load cached useragents in `cache/` directory  when [https://www.useragentstring.com](https://www.useragentstring.com) is down.
 
 
